@@ -1,0 +1,15 @@
+{
+  "name": "mirrormirror",
+  "version": "0.0.1",
+  "description": "Worker to Mirror hg(bitbucket) to git(github)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "BSD",
+  "dependencies": {
+    "speakingurl": "~0.2.20",
+    "express": "~3.3.5"
+  }
+}
