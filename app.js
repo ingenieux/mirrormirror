@@ -21,9 +21,9 @@ app.post('/hooks/bitbucket', function(req, res) {
     return u.slice(1, -1 + u.length);
   }(payload.repository.absolute_url);
 
-  mirror.main({ from: repo, to: repo }, function(err, data) {
+  mirror.main({ from: repo, to: repo }, function(error, data) {
     if (error) {
-      res.json(500, { status: 'fail', data: data });
+      res.json(500, { status: 'fail', error: error });
     } else {
       res.json(200, { status: 'ok', data: data });
     }
