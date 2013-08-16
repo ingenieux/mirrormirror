@@ -6,7 +6,7 @@ var path = require("path"),
     util = require("util"),
     fs = require("fs");
 
-module.main = exports.main = main = function(args) {
+module.main = exports.main = main = function(args, cb) {
   var workdir = path.join(__dirname, 'work', slug(args.from)).substring(1 + __dirname.length);
   var source = util.format("ssh://hg@bitbucket.org/%s", args.from);
   var target = util.format("git+ssh://git@github.com/%s.git", args.to);
@@ -18,15 +18,20 @@ module.main = exports.main = main = function(args) {
   }
 
   child.exec(cmd, function(error, stdout, stderr) {
+    if (error) {
+      cb(error);
+    }
     cmd = util.format("cd %s ; hg bookmark -f -r default master ; hg push %s", workdir, target);
     child.exec(cmd, function(error, stdout, stderr) {
-      console.log(arguments);
+      if (error) {
+        cb(error);
+      } else {
+        cb(null, { workdir: workdir, from: source, to: target });
+      }
     });
   });
-
-  console.log(workdir);
 }
 
 if (require.main == module) {
-  main({ from: "ingenieux/cedarhero", to: "ingenieux/cedarhero" });
+  main({ from: "ingenieux/cedarhero", to: "ingenieux/cedarhero" }, console.log);
 }
