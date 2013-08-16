@@ -4,6 +4,7 @@ var express = require("express");
 
 var app = express();
 
+app.use(express.logger());
 app.use(express.methodOverride());
 app.use(express.query());
 app.use(express.bodyParser());
@@ -13,12 +14,17 @@ app.get('/status', function(req, res) {
 });
 
 app.post('/hooks/bitbucket', function(req, res) {
-  var payload = JSON.parse(req.body.payload);
   var mirror = require("./mirror");
 
-  var repo = function(u) {
-    return u.slice(1, -1 + u.length);
-  }(payload.repository.absolute_url);
+  var repo = req.query['repo'];
+  
+  if (req.body && req.body.payload) {
+    var payload = JSON.parse(req.body.payload);
+
+    var repo = function(u) {
+      return u.slice(1, -1 + u.length);
+    }(payload.repository.absolute_url);
+  }
 
   mirror.main({ from: repo, to: repo }, function(error, data) {
     if (error) {

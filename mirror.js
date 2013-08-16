@@ -6,10 +6,19 @@ var path = require("path"),
     util = require("util"),
     fs = require("fs");
 
+var relocations = {};
+
+if (fs.existsSync('relocations.json')) {
+  relocations = require("./relocations");
+}
+
 module.main = exports.main = main = function(args, cb) {
   var workdir = path.join(__dirname, 'work', slug(args.from)).substring(1 + __dirname.length);
   var source = util.format("ssh://hg@bitbucket.org/%s", args.from);
-  var target = util.format("git+ssh://git@github.com/%s.git", args.to);
+  var target = function(e) {
+    var to = relocations[e] || e;
+    return util.format("git+ssh://git@github.com/%s.git", to);
+  }(args.to);
 
   if (! fs.existsSync(workdir)) {
     var cmd = util.format("hg clone %s %s", source, workdir);
