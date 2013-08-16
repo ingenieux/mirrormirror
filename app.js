@@ -11,7 +11,7 @@ app.use(express.bodyParser());
 
 app.get('/status', function(req, res) {
   res.json(200, { status: 'ok' });
-}
+});
 
 app.post('/hooks/bitbucket', function(req, res) {
   var payload = JSON.parse(req.body.payload);
