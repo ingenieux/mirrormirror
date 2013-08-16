@@ -8,6 +8,11 @@ app.use(express.methodOverride());
 app.use(express.errorHandler());
 app.use(express.query());
 app.use(express.bodyParser());
+
+app.get('/status', function(req, res) {
+  res.json(200, { status: 'ok' });
+}
+
 app.post('/hooks/bitbucket', function(req, res) {
   var payload = JSON.parse(req.body.payload);
   var mirror = require("./mirror");
