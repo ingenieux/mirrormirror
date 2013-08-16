@@ -5,7 +5,6 @@ var express = require("express");
 var app = express();
 
 app.use(express.methodOverride());
-app.use(express.errorHandler());
 app.use(express.query());
 app.use(express.bodyParser());
 
@@ -29,6 +28,8 @@ app.post('/hooks/bitbucket', function(req, res) {
     }
   });
 });
+
+app.use(express.errorHandler());
 
 var port = process.env.PORT || 8000;
 
